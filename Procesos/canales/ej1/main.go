@@ -22,13 +22,17 @@ func main() {
 		defer stdinPipe.Close()
 
 	// Crear un canal para recibir señales del sistema operativo
-	canal := make(chan os.Signal, 1)
+	go func ()  {
+		canal := make(chan os.Signal, 1)
 	signal.Notify(canal, syscall.SIGINT)
 
 	switch <-canal {
 	case syscall.SIGINT:
-		fmt.Println("Received interrupt signal")
+		fmt.Println("Parent process received SIGINT, sending SIGTERM to child process")
+	case syscall.SIGTERM:
+		fmt.Println("Parent process received SIGTERM, terminating child process")
 	}
+}()
 
-	stdinPipe.Close()
+	defer stdinPipe.Close()
 }
