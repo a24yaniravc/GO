@@ -35,4 +35,12 @@ func main() {
 }()
 
 	defer stdinPipe.Close()
+
+	stdoutPipe, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Println("Error creating stdout pipe:", err)
+		return
+	}
+	
+	defer stdoutPipe.Close()
 }
